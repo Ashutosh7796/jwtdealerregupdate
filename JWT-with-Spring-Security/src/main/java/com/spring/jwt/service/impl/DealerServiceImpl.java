@@ -1,5 +1,6 @@
 package com.spring.jwt.service.impl;
 
+import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.dto.RegisterDto;
 import com.spring.jwt.entity.Dealer;
 import com.spring.jwt.entity.User;
@@ -12,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +70,33 @@ public class DealerServiceImpl implements DealerService {
         user.setEmail(registerDto.getEmail()); // Update email in User table as well
         userRepository.save(user); // Save the updated User entity
     }
+    @Override
+    public List<DealerDto> getAllDealers() {
+        List<Dealer> dealers = dealerRepository.findAll();
+        return dealers.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public DealerDto getDealerById(Integer dealerId) {
+        Optional<Dealer> dealerOptional = dealerRepository.findById(dealerId);
+        return dealerOptional.map(this::convertToDto).orElse(null);
+    }
+
+    private DealerDto convertToDto(Dealer dealer) {
+        DealerDto dealerDto = new DealerDto();
+        dealerDto.setAddress(dealer.getAddress());
+        dealerDto.setAdharShopact(dealer.getAdharShopact());
+        dealerDto.setArea(dealer.getArea());
+        dealerDto.setCity(dealer.getCity());
+        dealerDto.setFristname(dealer.getFristname());
+        dealerDto.setLastName(dealer.getLastName());
+        dealerDto.setMobileNo(dealer.getMobileNo());
+        dealerDto.setShopName(dealer.getShopName());
+        dealerDto.setEmail(dealer.getEmail());
+        return dealerDto;
+    }
+
+}
 

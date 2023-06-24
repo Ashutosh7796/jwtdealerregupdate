@@ -12,6 +12,7 @@ import com.spring.jwt.utils.BaseResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,21 @@ public class DealerServiceImpl implements DealerService {
         dealerDto.setShopName(dealer.getShopName());
         dealerDto.setEmail(dealer.getEmail());
         return dealerDto;
+    }
+
+    @Override
+    @Transactional
+    public BaseResponseDTO deleteDealer(Integer dealerId) {
+        BaseResponseDTO response = new BaseResponseDTO();
+
+        dealerRepository.findById(dealerId).ifPresent(dealer -> {
+            userRepository.deleteById(dealer.getUser().getId());
+            dealerRepository.delete(dealer);
+        });
+
+        response.setCode(String.valueOf(HttpStatus.OK.value()));
+        response.setMessage("Dealer deleted successfully");
+        return response;
     }
 
 }

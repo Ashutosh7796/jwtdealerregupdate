@@ -11,4 +11,6 @@ public interface DealerService {
 
     List<DealerDto> getAllDealers();
     DealerDto getDealerById(Integer dealerId);
+
+    BaseResponseDTO deleteDealer(Integer dealerId);
 }

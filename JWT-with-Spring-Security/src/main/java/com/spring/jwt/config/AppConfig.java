@@ -72,10 +72,10 @@ public class AppConfig {
                 .formLogin().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/account/**").permitAll()
-                .requestMatchers("/guest/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/user/**").hasAuthority("USER")
                 .requestMatchers("/dealer/**").hasAnyAuthority("DEALER", "ADMIN")
+                .requestMatchers("/car/**").hasAnyAuthority("DEALER", "ADMIN")
 
                 .anyRequest().authenticated()
                 .and()

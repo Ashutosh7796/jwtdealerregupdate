@@ -59,8 +59,8 @@ public class Dealer {
     @OneToMany(mappedBy = "dealerVendor")
     private Set<Biddingbuy> biddingbuys = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "dealerVendor")
-    private Set<Car> cars = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "dealerVendor")
+//    private Set<Car> cars = new LinkedHashSet<>();
 
     public Dealer(DealerDto dealerDto) {
         this.address = dealerDto.address;

@@ -1,5 +1,6 @@
 package com.spring.jwt.controller;
 
+import com.spring.jwt.dto.ChangePasswordDto;
 import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.dto.RegisterDto;
 import com.spring.jwt.service.DealerService;
@@ -40,5 +41,13 @@ public class DealerController {
     @DeleteMapping("/{dealerId}")
     public ResponseEntity<BaseResponseDTO> deleteDealer(@PathVariable("dealerId") Integer dealerId) {
         return ResponseEntity.ok(dealerService.deleteDealer(dealerId));
+    }
+
+    @PutMapping("/changePassword/{userId}")
+    public ResponseEntity<BaseResponseDTO> changePassword(
+            @PathVariable("userId") Integer userId,
+            @RequestBody ChangePasswordDto changePasswordDto
+    ) {
+        return ResponseEntity.ok(dealerService.changePassword(userId, changePasswordDto));
     }
 }

@@ -1,5 +1,6 @@
 package com.spring.jwt.service.impl;
 
+import com.spring.jwt.dto.ChangePasswordDto;
 import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.dto.RegisterDto;
 import com.spring.jwt.entity.Dealer;
@@ -11,6 +12,7 @@ import com.spring.jwt.service.DealerService;
 import com.spring.jwt.utils.BaseResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,8 @@ public class DealerServiceImpl implements DealerService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final DealerRepository dealerRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public BaseResponseDTO updateDealer(Integer userId, RegisterDto registerDto) {
         BaseResponseDTO response = new BaseResponseDTO();
@@ -111,6 +115,40 @@ public class DealerServiceImpl implements DealerService {
 
         response.setCode(String.valueOf(HttpStatus.OK.value()));
         response.setMessage("Dealer deleted successfully");
+        return response;
+    }
+    @Override
+    public BaseResponseDTO changePassword(Integer userId, ChangePasswordDto changePasswordDto) {
+        BaseResponseDTO response = new BaseResponseDTO();
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            if (user.getRoles().stream().anyMatch(role -> role.getName().equals("DEALER"))) {
+                if (passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
+                    if (changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
+                        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+                        userRepository.save(user);
+                        response.setCode(String.valueOf(HttpStatus.OK.value()));
+                        response.setMessage("Password changed successfully");
+                    } else {
+                        response.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+                        response.setMessage("New password and confirm password do not match");
+                    }
+                } else {
+                    response.setCode(String.valueOf(HttpStatus.UNAUTHORIZED.value()));
+                    response.setMessage("Invalid old password");
+                }
+            } else {
+                response.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
+                response.setMessage("User is not a dealer");
+            }
+        } else {
+            response.setCode(String.valueOf(HttpStatus.NOT_FOUND.value()));
+            response.setMessage("User not found");
+        }
+
         return response;
     }
 

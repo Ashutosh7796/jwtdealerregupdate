@@ -1,5 +1,6 @@
 package com.spring.jwt.service;
 
+import com.spring.jwt.dto.ChangePasswordDto;
 import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.dto.RegisterDto;
 import com.spring.jwt.utils.BaseResponseDTO;
@@ -13,4 +14,7 @@ public interface DealerService {
     DealerDto getDealerById(Integer dealerId);
 
     BaseResponseDTO deleteDealer(Integer dealerId);
+
+    BaseResponseDTO changePassword(Integer userId, ChangePasswordDto changePasswordDto);
+
 }

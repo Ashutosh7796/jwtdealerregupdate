@@ -93,10 +93,10 @@ public class Car {
     @Column(name = "year")
     private int year;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "dealer_vendor_id", nullable = false)
-    private Dealer dealerVendor;
-
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "dealer_vendor_id", nullable = false)
+//    private Dealer dealerVendor;
+      private int dealer_id;
 
 //    private Carphoto carphotoCarPhoto;
 @ManyToMany
